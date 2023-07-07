@@ -37,7 +37,6 @@ export default {
   methods: {
     toggleAuthModal() {
       this.modalStore.isOpen = !this.modalStore.isOpen;
-      console.log(this.modalStore.isOpen);
     },
   },
 };
