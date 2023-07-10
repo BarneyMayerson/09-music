@@ -109,10 +109,12 @@
             <!-- Age -->
             <div class="mb-3">
               <label class="inline-block mb-2">Age</label>
-              <input
+              <VeeField
+                name="age"
                 type="number"
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
               />
+              <ErrorMessage name="age" class="text-red-600 text-xs" />
             </div>
             <!-- Password -->
             <div class="mb-3">
@@ -174,6 +176,7 @@ export default {
       schema: {
         name: "required|min:4|max:100|alpha_spaces",
         email: "required|min:4|max:100|email",
+        age: "required|min_value:16|max_value:107",
         password: "",
         confirm_password: "",
         country: "",
