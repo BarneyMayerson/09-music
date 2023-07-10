@@ -170,7 +170,7 @@ export default {
     return {
       tab: "login",
       schema: {
-        name: "required",
+        name: "required|min:4|max:10|alpha_spaces",
         email: "",
         password: "",
         confirm_password: "",
