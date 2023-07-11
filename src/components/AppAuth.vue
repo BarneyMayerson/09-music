@@ -131,8 +131,10 @@
                   placeholder="Password"
                   v-bind="field"
                 />
-                <div class="text-red-600 text-xs" v-for="error in errors" :key="error">
-                  {{ error }}
+                <div class="mt-1">
+                  <span class="text-red-600 text-xs block" v-for="error in errors" :key="error">
+                    {{ error }}
+                  </span>
                 </div>
               </VeeField>
             </div>
@@ -201,9 +203,9 @@ export default {
         email: "required|min:4|max:100|email",
         age: "required|min_value:16|max_value:107",
         password: "required|min:8|max:48|excluded:password,111111,123456",
-        confirm_password: "confirmed:@password",
-        country: "required|excluded:Russia,Belarus",
-        tos: "required",
+        confirm_password: "password_mismatch:@password",
+        country: "required|country_excluded:Russia,Belarus",
+        tos: "tos",
       },
       userData: {
         country: "USA",
