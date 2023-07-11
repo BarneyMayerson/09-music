@@ -83,6 +83,13 @@
             </button>
           </form>
           <!-- Registration Form -->
+          <div
+            v-if="reg_show_alert"
+            class="text-white text-center font-bold rounded p-4 mb-4"
+            :class="reg_alert_variant"
+          >
+            {{ reg_alert_msg }}
+          </div>
           <VeeForm
             v-show="tab === 'register'"
             :validation-schema="schema"
@@ -178,6 +185,7 @@
             <button
               type="submit"
               class="block w-full bg-purple-600 text-white py-1.5 px-3 rounded transition hover:bg-purple-700"
+              :disabled="reg_in_progress"
             >
               Submit
             </button>
@@ -211,6 +219,10 @@ export default {
         country: "USA",
         age: 23,
       },
+      reg_in_progress: false,
+      reg_show_alert: false,
+      reg_alert_variant: "bg-blue-500",
+      reg_alert_msg: "Please wait! Your account is being created.",
     };
   },
 
@@ -223,7 +235,16 @@ export default {
 
   methods: {
     register(values) {
-      console.log(values);
+      this.reg_show_alert = true;
+      this.reg_in_progress = true;
+      this.reg_alert_variant = "bg-blue-500";
+      this.reg_alert_msg = "Please wait! Your account is being created.";
+
+      setTimeout(() => {
+        this.reg_alert_variant = "bg-green-500";
+        this.reg_alert_msg = "Success! Your account has been created.";
+        console.log(values);
+      }, 3000);
     },
   },
 };
