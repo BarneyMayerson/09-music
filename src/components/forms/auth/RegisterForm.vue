@@ -106,7 +106,7 @@
 </template>
 
 <script>
-import { auth } from "@/includes/firebase";
+import { auth, usersCollection } from "@/includes/firebase";
 
 export default {
   name: "RegisterForm",
@@ -144,6 +144,20 @@ export default {
 
       try {
         userCredentials = await auth.createUserWithEmailAndPassword(values.email, values.password);
+      } catch (error) {
+        this.reg_in_progress = false;
+        this.reg_alert_variant = "bg-red-500";
+        this.reg_alert_msg = "An unexpected error occured. Please try again later.";
+        return;
+      }
+
+      try {
+        await usersCollection.add({
+          name: values.name,
+          email: values.email,
+          country: values.country,
+          age: values.age,
+        });
       } catch (error) {
         this.reg_in_progress = false;
         this.reg_alert_variant = "bg-red-500";
