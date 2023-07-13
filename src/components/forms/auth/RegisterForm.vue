@@ -40,6 +40,19 @@
       />
       <ErrorMessage name="age" class="text-red-600 text-xs" />
     </div>
+    <!-- Attitude -->
+    <div class="mb-3">
+      <label class="inline-block mb-2">Attitude</label>
+      <VeeField
+        as="select"
+        name="attitude"
+        class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
+      >
+        <option value="listener">Listener</option>
+        <option value="artist">Artist</option>
+      </VeeField>
+      <ErrorMessage name="attitude" class="text-red-600 text-xs" />
+    </div>
     <!-- Password -->
     <div class="mb-3">
       <label class="inline-block mb-2">Password</label>
@@ -117,6 +130,7 @@ export default {
         name: "required|min:4|max:100|alpha_spaces",
         email: "required|min:4|max:100|email",
         age: "required|min_value:16|max_value:107",
+        attitude: "required",
         password: "required|min:8|max:48|excluded:password,111111,123456",
         confirm_password: "password_mismatch:@password",
         country: "required|country_excluded:Russia,Belarus",
@@ -125,6 +139,7 @@ export default {
       userData: {
         country: "USA",
         age: 23,
+        attitude: "listener",
       },
       reg_in_progress: false,
       reg_show_alert: false,
@@ -157,6 +172,7 @@ export default {
           email: values.email,
           country: values.country,
           age: values.age,
+          attitude: values.attitude,
         });
       } catch (error) {
         this.reg_in_progress = false;
