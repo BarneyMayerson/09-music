@@ -28,7 +28,7 @@
               <RouterLink class="px-2 text-white" :to="{ name: 'manage' }">Manage</RouterLink>
             </li>
             <li>
-              <a class="px-2 text-white" href="#" @click.prevent="userStore.signOut">Logout</a>
+              <a class="px-2 text-white" href="#" @click.prevent="signOut">Logout</a>
             </li>
           </template>
         </ul>
@@ -41,6 +41,7 @@
 import { mapStores } from "pinia";
 import useModalStore from "@/stores/modal";
 import useUserStore from "@/stores/user";
+import { toHandlerKey } from "vue";
 
 export default {
   name: "AppHeader",
@@ -52,6 +53,14 @@ export default {
   methods: {
     toggleAuthModal() {
       this.modalStore.isOpen = !this.modalStore.isOpen;
+    },
+    signOut() {
+      this.userStore.signOut();
+
+      // console.log(this.$route);
+      if (this.$route.name === "manage") {
+        this.$router.push({ name: "home" });
+      }
     },
   },
 };
