@@ -21,8 +21,6 @@ const routes = [
     // alias: "/manage",
     component: Manage,
     beforeEnter: (to, from, next) => {
-      console.log("Manage route guard.");
-
       next();
     },
     meta: {

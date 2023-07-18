@@ -15,7 +15,7 @@
         @dragover.prevent.stop="isDragover = true"
         @dragenter.prevent.stop="isDragover = true"
         @dragleave.prevent.stop="isDragover = false"
-        @drop.prevent.stop="upload"
+        @drop.prevent.stop="upload($event)"
       >
         <h5>Drop your files here</h5>
       </div>
@@ -56,8 +56,18 @@ export default {
   },
 
   methods: {
-    upload() {
+    upload($event) {
       this.isDragover = false;
+
+      const files = [...$event.dataTransfer.files];
+
+      files.forEach((file) => {
+        if (file.type !== "audio/mpeg") {
+          return;
+        }
+      });
+
+      console.log(files);
     },
   },
 };
