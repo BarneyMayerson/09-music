@@ -46,6 +46,8 @@
 </template>
 
 <script>
+import { storage } from "@/includes/firebase";
+
 export default {
   name: "Upload",
 
@@ -56,15 +58,19 @@ export default {
   },
 
   methods: {
-    upload($event) {
+    async upload($event) {
       this.isDragover = false;
 
-      const files = [...$event.dataTransfer.files];
+      const files = await [...$event.dataTransfer.files];
 
       files.forEach((file) => {
         if (file.type !== "audio/mpeg") {
           return;
         }
+
+        const storageRef = storage.ref(); // music-75ac2.appspot.com
+        const songsRef = storageRef.child(`songs/${file.name}`); // music-75ac2.appspot.com/sings/example.mp3
+        songsRef.put(file);
       });
 
       console.log(files);
