@@ -66,14 +66,17 @@ export default {
 
         const task = songsRef.put(file);
 
-        this.uploads.push({
-          task,
-          current_progress: 0,
-          name: file.name,
-        });
+        const uploadIndex =
+          this.uploads.push({
+            task,
+            current_progress: 0,
+            name: file.name,
+          }) - 1;
 
         task.on("state_changed", (snapshot) => {
           const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+
+          this.uploads[uploadIndex].current_progress = progress;
         });
       });
 
