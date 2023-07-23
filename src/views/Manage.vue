@@ -110,8 +110,23 @@ export default {
 
   components: { Upload },
 
+  data() {
+    return {
+      songs: [],
+    };
+  },
+
   async created() {
     const snapshot = await songsCollection.where("uid", "==", auth.currentUser.uid).get();
+
+    snapshot.forEach((document) => {
+      const song = {
+        docId: document.id,
+        ...document.data(),
+      };
+
+      this.songs.push(song);
+    });
   },
 
   // beforeRouteLeave(to, from, next) {
