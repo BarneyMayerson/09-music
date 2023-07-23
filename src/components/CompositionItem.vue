@@ -1,4 +1,5 @@
 <template>
+  import { ErrorMessage } from 'vee-validate';
   <div class="border border-gray-200 p-3 mb-4 rounded">
     <div v-show="!showForm">
       <h4 class="inline-block text-2xl font-bold">{{ song.modified_name }}</h4>
@@ -13,26 +14,30 @@
       </button>
     </div>
     <div v-show="showForm">
-      <form>
+      <VeeForm :validation-schema="schema" :initial-values="song" @submit="update">
         <div class="mb-3">
           <label class="inline-block mb-2">Song Title</label>
-          <input
+          <VeeField
             type="text"
+            name="modified_name"
             class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
             placeholder="Enter Song Title"
           />
+          <ErrorMessage name="modified_name" class="text-red-600 text-xs" />
         </div>
         <div class="mb-3">
           <label class="inline-block mb-2">Genre</label>
-          <input
+          <VeeField
             type="text"
+            name="genre"
             class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
             placeholder="Enter Genre"
           />
+          <ErrorMessage name="genre" class="text-red-600 text-xs" />
         </div>
         <button type="submit" class="py-1.5 px-3 rounded text-white bg-green-600">Submit</button>
         <button type="button" class="py-1.5 px-3 rounded text-white bg-gray-600">Go Back</button>
-      </form>
+      </VeeForm>
     </div>
   </div>
 </template>
@@ -51,7 +56,17 @@ export default {
   data() {
     return {
       showForm: false,
+      schema: {
+        modified_name: "required",
+        genre: "alpha_spaces",
+      },
     };
+  },
+
+  methods: {
+    update() {
+      console.log("EDITED!");
+    },
   },
 };
 </script>
