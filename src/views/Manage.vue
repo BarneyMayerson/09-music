@@ -109,10 +109,10 @@ export default {
 
   components: { Upload },
 
-  beforeRouteLeave(to, from, next) {
-    this.$refs.upload.cancelUploads();
+  // beforeRouteLeave(to, from, next) {
+  //   this.$refs.upload.cancelUploads();
 
-    next();
-  },
+  //   next();
+  // },
 };
 </script>
