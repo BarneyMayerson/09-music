@@ -1,5 +1,4 @@
 <template>
-  import { ErrorMessage } from 'vee-validate';
   <div class="border border-gray-200 p-3 mb-4 rounded">
     <div v-show="!showForm">
       <h4 class="inline-block text-2xl font-bold">{{ song.modified_name }}</h4>
@@ -14,6 +13,13 @@
       </button>
     </div>
     <div v-show="showForm">
+      <div
+        v-if="show_alert"
+        class="text-white text-center font-bold p-4 mb-4"
+        :class="alert_variant"
+      >
+        {{ alert_message }}
+      </div>
       <VeeForm :validation-schema="schema" :initial-values="song" @submit="update">
         <div class="mb-3">
           <label class="inline-block mb-2">Song Title</label>
@@ -35,20 +41,43 @@
           />
           <ErrorMessage name="genre" class="text-red-600 text-xs" />
         </div>
-        <button type="submit" class="py-1.5 px-3 rounded text-white bg-green-600">Submit</button>
-        <button type="button" class="py-1.5 px-3 rounded text-white bg-gray-600">Go Back</button>
+        <button
+          type="submit"
+          class="py-1.5 px-3 rounded text-white bg-green-600"
+          :disabled="in_progress"
+        >
+          Submit
+        </button>
+        <button
+          type="button"
+          class="py-1.5 px-3 rounded text-white bg-gray-600 ml-1"
+          @click.prevent="showForm = false"
+          :disabled="in_progress"
+        >
+          Go Back
+        </button>
       </VeeForm>
     </div>
   </div>
 </template>
 
 <script>
+import { songsCollection } from "@/includes/firebase";
+
 export default {
   name: "CompositionItem",
 
   props: {
     song: {
       type: Object,
+      required: true,
+    },
+    updateSong: {
+      type: Function,
+      required: true,
+    },
+    index: {
+      type: Number,
       required: true,
     },
   },
@@ -60,12 +89,35 @@ export default {
         modified_name: "required",
         genre: "alpha_spaces",
       },
+      in_progress: false,
+      show_alert: false,
+      alert_variant: "bg-blue-500",
+      alert_message: "Please wait! Updating song info.",
     };
   },
 
   methods: {
-    update() {
-      console.log("EDITED!");
+    async update(values) {
+      this.in_progress = true;
+      this.show_alert = true;
+      this.alert_variant = "bg-blue-500";
+      this.alert_message = "Please wait! Updating song info.";
+
+      try {
+        await songsCollection.doc(this.song.docId).update(values);
+      } catch (error) {
+        this.in_progress = false;
+        this.alert_variant = "bg-red-500";
+        this.alert_message = "Something went wrong! Try again later.";
+
+        return;
+      }
+
+      this.updateSong(this.index, values);
+
+      this.in_progress = false;
+      this.alert_variant = "bg-green-500";
+      this.alert_message = "Success!";
     },
   },
 };
