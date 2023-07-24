@@ -19,6 +19,7 @@
               :song="song"
               :updateSong="updateSong"
               :removeSong="removeSong"
+              :updateUnsaveFlag="updateUnsaveFlag"
               :index="i"
             />
           </div>
@@ -41,6 +42,7 @@ export default {
   data() {
     return {
       songs: [],
+      unsaveFlag: false,
     };
   },
 
@@ -66,12 +68,19 @@ export default {
 
       this.songs.push(song);
     },
+    updateUnsaveFlag(value) {
+      this.unsaveFlag = value;
+    },
   },
 
-  // beforeRouteLeave(to, from, next) {
-  //   this.$refs.upload.cancelUploads();
+  beforeRouteLeave(to, from, next) {
+    if (!this.unsaveFlag) {
+      next();
+    } else {
+      const leave = confirm("You have unsaved changes! Are you sure you want to leave?");
 
-  //   next();
-  // },
+      next(leave);
+    }
+  },
 };
 </script>
