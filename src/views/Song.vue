@@ -169,5 +169,15 @@ export default {
       });
     },
   },
+
+  watch: {
+    sort(newValue) {
+      this.$router.push({
+        query: {
+          sort: newValue,
+        },
+      });
+    },
+  },
 };
 </script>
