@@ -29,15 +29,28 @@
         <i class="fa fa-comments float-right text-green-400 text-2xl"></i>
       </div>
       <div class="p-6">
-        <VeeForm :validation-schema="schema">
-          <VeeField
-            as="textarea"
-            name="comment"
-            class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded mb-4"
-            placeholder="Your comment here..."
-          ></VeeField>
-          <ErrorMessage name="comment" class="text-red-600 text-xs" />
-          <button type="submit" class="py-1.5 px-3 rounded text-white bg-green-600 block">
+        <div
+          v-show="comment_show_alert"
+          class="text-white text-center rounded font-bold p-4 mb-4"
+          :class="comment_alert_variant"
+        >
+          {{ comment_alert_message }}
+        </div>
+        <VeeForm :validation-schema="schema" @submit="addComment">
+          <div class="mb-4">
+            <VeeField
+              as="textarea"
+              name="comment"
+              class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
+              placeholder="Your comment here..."
+            ></VeeField>
+            <ErrorMessage name="comment" class="text-red-600 text-xs" />
+          </div>
+          <button
+            type="submit"
+            class="py-1.5 px-3 rounded text-white bg-green-600 block"
+            :disabled="comment_in_submission"
+          >
             Submit
           </button>
         </VeeForm>
@@ -140,8 +153,13 @@ export default {
       schema: {
         comment: "required|min:4",
       },
+      comment_in_submission: false,
+      comment_show_alert: false,
+      comment_alert_variant: "bg-blue-500",
+      comment_alert_message: "Please wait! Your comment is being submitted.",
     };
   },
+
   async created() {
     const docSnapshot = await songsCollection.doc(this.$route.params.id).get();
 
@@ -151,6 +169,21 @@ export default {
       return;
     }
     this.song = docSnapshot.data();
+  },
+
+  methods: {
+    async addComment(values) {
+      this.comment_in_submission = true;
+      this.comment_show_alert = true;
+      this.comment_alert_variant = "bg-blue-500";
+      this.comment_alert_message = "Please wait! Your comment is being submitted.";
+
+      setTimeout(() => {
+        this.comment_in_submission = false;
+        this.comment_alert_variant = "bg-green-500";
+        this.comment_alert_message = "Success!";
+      }, 2000);
+    },
   },
 };
 </script>
