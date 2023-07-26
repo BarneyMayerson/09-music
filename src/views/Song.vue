@@ -36,7 +36,7 @@
         >
           {{ comment_alert_message }}
         </div>
-        <VeeForm :validation-schema="schema" @submit="addComment">
+        <VeeForm :validation-schema="schema" @submit="addComment" v-if="userLoggedIn">
           <div class="mb-4">
             <VeeField
               as="textarea"
@@ -142,7 +142,9 @@
 </template>
 
 <script>
-import { songsCollection } from "@/includes/firebase";
+import { songsCollection, commentsCollection, auth } from "@/includes/firebase";
+import { mapState } from "pinia";
+import useUserStore from "@/stores/user";
 
 export default {
   name: "Song",
@@ -160,6 +162,10 @@ export default {
     };
   },
 
+  computed: {
+    ...mapState(useUserStore, ["userLoggedIn"]),
+  },
+
   async created() {
     const docSnapshot = await songsCollection.doc(this.$route.params.id).get();
 
@@ -172,17 +178,27 @@ export default {
   },
 
   methods: {
-    async addComment(values) {
+    async addComment(values, { resetForm }) {
       this.comment_in_submission = true;
       this.comment_show_alert = true;
       this.comment_alert_variant = "bg-blue-500";
       this.comment_alert_message = "Please wait! Your comment is being submitted.";
 
-      setTimeout(() => {
-        this.comment_in_submission = false;
-        this.comment_alert_variant = "bg-green-500";
-        this.comment_alert_message = "Success!";
-      }, 2000);
+      const comment = {
+        songId: this.$route.params.id,
+        author: auth.currentUser.displayName,
+        content: values.comment,
+        datePosted: new Date().toString(),
+        uid: auth.currentUser.uid,
+      };
+
+      await commentsCollection.add(comment);
+
+      this.comment_in_submission = false;
+      this.comment_alert_variant = "bg-green-500";
+      this.comment_alert_message = "Comment added!";
+
+      resetForm();
     },
   },
 };
