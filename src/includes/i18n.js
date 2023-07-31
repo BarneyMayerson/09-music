@@ -21,7 +21,7 @@ function customRule(choice, choicesLength) {
 }
 
 export default createI18n({
-  locale: "ru",
+  locale: "en",
   fallbackLocale: "en",
   messages: {
     en,
@@ -29,5 +29,19 @@ export default createI18n({
   },
   pluralizationRules: {
     ru: customRule,
+  },
+  numberFormats: {
+    en: {
+      currency: {
+        style: "currency",
+        currency: "USD",
+      },
+    },
+    ru: {
+      currency: {
+        style: "currency",
+        currency: "RUB",
+      },
+    },
   },
 });
