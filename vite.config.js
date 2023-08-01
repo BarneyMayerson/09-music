@@ -16,7 +16,6 @@ export default defineConfig({
       manifest: {
         name: "Music Application",
         theme_color: "#ff5e3a",
-
         icons: [
           {
             src: "assets/img/pwa-192x192.png",
@@ -24,6 +23,9 @@ export default defineConfig({
             type: "image/png",
           },
         ],
+      },
+      workbox: {
+        globPatterns: ["**/*.{js,css,html,png,jpg,}"],
       },
     }),
   ],
