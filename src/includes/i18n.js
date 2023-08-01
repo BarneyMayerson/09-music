@@ -21,7 +21,7 @@ function customRule(choice, choicesLength) {
 }
 
 export default createI18n({
-  locale: "ru",
+  locale: "en",
   fallbackLocale: "en",
   messages: {
     en,

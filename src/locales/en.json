@@ -8,5 +8,8 @@
   "register": {
     "accept": "I except Music's {0}",
     "tos": "Term of Service"
+  },
+  "manage": {
+    "my-label": "My Songs"
   }
 }
