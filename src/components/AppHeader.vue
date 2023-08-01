@@ -32,6 +32,13 @@
             </li>
           </template>
         </ul>
+        <ul class="ml-auto">
+          <li>
+            <a href="#" class="text-white px-2" @click.prevent="changeLocale">
+              {{ currentLocale }}
+            </a>
+          </li>
+        </ul>
       </div>
     </nav>
   </header>
@@ -41,13 +48,15 @@
 import { mapStores } from "pinia";
 import useModalStore from "@/stores/modal";
 import useUserStore from "@/stores/user";
-import { toHandlerKey } from "vue";
 
 export default {
   name: "AppHeader",
 
   computed: {
     ...mapStores(useModalStore, useUserStore),
+    currentLocale() {
+      return this.$i18n.locale === "en" ? "Eng" : "Rus";
+    },
   },
 
   methods: {
@@ -57,10 +66,12 @@ export default {
     signOut() {
       this.userStore.signOut();
 
-      // console.log(this.$route);
       if (this.$route.meta.requiresAuth) {
         this.$router.push({ name: "home" });
       }
+    },
+    changeLocale() {
+      this.$i18n.locale = this.$i18n.locale === "en" ? "ru" : "en";
     },
   },
 };
