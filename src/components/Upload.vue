@@ -71,6 +71,19 @@ export default {
           return;
         }
 
+        if (!navigator.onLine) {
+          this.uploads.push({
+            task: {},
+            current_progress: 100,
+            name: file.name,
+            variant: "bg-red-400",
+            icon: "fas fa-times",
+            text_class: "text-red-400",
+          });
+
+          return;
+        }
+
         const storageRef = storage.ref(); // music-75ac2.appspot.com
         const songsRef = storageRef.child(`songs/${file.name}`); // music-75ac2.appspot.com/sings/example.mp3
 
