@@ -30,11 +30,8 @@
 </template>
 
 <script>
-import { RouterLink } from "vue-router";
-
 export default {
   name: "SongItem",
   props: ["song"],
-  components: { RouterLink },
 };
 </script>
