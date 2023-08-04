@@ -1,4 +1,4 @@
-import { shallowMount } from "@vue/test-utils";
+import { shallowMount, RouterLinkStub } from "@vue/test-utils";
 import SongItem from "@/components/SongItem.vue";
 
 describe("SongItem.vue", () => {
@@ -11,8 +11,15 @@ describe("SongItem.vue", () => {
       props: {
         song,
       },
+      global: {
+        components: {
+          RouterLink: RouterLinkStub,
+        },
+      },
     });
 
-    expect(wrapper.text()).toContain("Tester");
+    const itemAuthor = wrapper.find(".text-gray-500");
+
+    expect(itemAuthor.text()).toBe("Tester");
   });
 });
