@@ -6,7 +6,7 @@
     <div>
       <RouterLink
         :to="{ name: 'song', params: { id: song.docId } }"
-        class="font-bold block text-gray-600"
+        class="font-bold block text-gray-600 composition-name"
       >
         {{ song.modified_name }}
       </RouterLink>
