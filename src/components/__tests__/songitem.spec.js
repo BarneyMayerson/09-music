@@ -39,6 +39,7 @@ describe("SongItem.vue", () => {
       },
     });
 
-    expect(wrapper.attributes().id).toBe("song-id-abcd");
+    // expect(wrapper.attributes().id).toBe("song-id-abcd");
+    expect(wrapper.classes()).toContain("song-id-abcd");
   });
 });
