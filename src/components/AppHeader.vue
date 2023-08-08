@@ -44,35 +44,34 @@
   </header>
 </template>
 
-<script>
-import { mapStores } from "pinia";
+<script setup>
+import { computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
 import useModalStore from "@/stores/modal";
 import useUserStore from "@/stores/user";
 
-export default {
-  name: "AppHeader",
+const modalStore = useModalStore();
+const userStore = useUserStore();
 
-  computed: {
-    ...mapStores(useModalStore, useUserStore),
-    currentLocale() {
-      return this.$i18n.locale === "en" ? "Eng" : "Rus";
-    },
-  },
+const route = useRoute();
+const router = useRouter();
 
-  methods: {
-    toggleAuthModal() {
-      this.modalStore.isOpen = !this.modalStore.isOpen;
-    },
-    signOut() {
-      this.userStore.signOut();
+const i18n = useI18n();
 
-      if (this.$route.meta.requiresAuth) {
-        this.$router.push({ name: "home" });
-      }
-    },
-    changeLocale() {
-      this.$i18n.locale = this.$i18n.locale === "en" ? "ru" : "en";
-    },
-  },
+const currentLocale = computed(() => (i18n.locale.value === "en" ? "Eng" : "Rus"));
+
+const toggleAuthModal = () => (modalStore.isOpen = !modalStore.isOpen);
+
+const signOut = () => {
+  userStore.signOut();
+
+  if (route.meta.requiresAuth) {
+    router.push({ name: "home" });
+  }
+};
+
+const changeLocale = () => {
+  i18n.locale.value = i18n.locale.value === "en" ? "ru" : "en";
 };
 </script>
