@@ -62,28 +62,15 @@
   </div>
 </template>
 
-<script>
-import { mapState, mapWritableState } from "pinia";
+<script setup>
+import { storeToRefs } from "pinia";
 import useModalStore from "@/stores/modal";
 import LoginForm from "@/components/forms/auth/LoginForm.vue";
 import RegisterForm from "@/components/forms/auth/RegisterForm.vue";
+import { ref } from "vue";
 
-export default {
-  name: "AppAuth",
+const tab = ref("login");
 
-  components: { LoginForm, RegisterForm },
-
-  data() {
-    return {
-      tab: "login",
-    };
-  },
-
-  computed: {
-    ...mapState(useModalStore, ["hiddenClass"]),
-    ...mapWritableState(useModalStore, {
-      modalVisibility: "isOpen",
-    }),
-  },
-};
+const modalStore = useModalStore();
+const { isOpen: modalVisibility, hiddenClass } = storeToRefs(modalStore);
 </script>
