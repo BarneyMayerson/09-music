@@ -30,9 +30,11 @@
   </li>
 </template>
 
-<script>
-export default {
-  name: "SongItem",
-  props: ["song"],
-};
+<script setup>
+defineProps({
+  song: {
+    type: Object,
+    required: true,
+  },
+});
 </script>
