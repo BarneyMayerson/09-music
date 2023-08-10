@@ -41,52 +41,43 @@
   </VeeForm>
 </template>
 
-<script>
+<script setup>
 import { mapActions } from "pinia";
 import useUserStore from "@/stores/user";
+import { ref } from "vue";
 
-export default {
-  name: "LoginForm",
+const loginSchema = {
+  email: "required|email",
+  password: "required|min:8|max:48",
+};
 
-  data() {
-    return {
-      loginSchema: {
-        email: "required|email",
-        password: "required|min:8|max:48",
-      },
+const login_in_progress = ref(false);
+const login_show_alert = ref(false);
+const login_alert_variant = ref("bg-blue-500");
+const login_alert_msg = ref("Please wait! We are logging you in.");
 
-      login_in_progress: false,
-      login_show_alert: false,
-      login_alert_variant: "bg-blue-500",
-      login_alert_msg: "Please wait! We are logging you in.",
-    };
-  },
+const userStore = useUserStore();
 
-  methods: {
-    ...mapActions(useUserStore, ["authenticate"]),
+const login = async (values) => {
+  login_show_alert.value = true;
+  login_in_progress.value = true;
+  login_alert_variant.value = "bg-blue-500";
+  login_alert_msg.value = "Please wait! We are logging you in.";
 
-    async login(values) {
-      this.login_show_alert = true;
-      this.login_in_progress = true;
-      this.login_alert_variant = "bg-blue-500";
-      this.login_alert_msg = "Please wait! We are logging you in.";
+  try {
+    await userStore.authenticate(values);
+  } catch (error) {
+    login_in_progress.value = false;
+    login_alert_variant.value = "bg-red-500";
+    login_alert_msg.value = "Invalid login details.";
 
-      try {
-        await this.authenticate(values);
-      } catch (error) {
-        this.login_in_progress = false;
-        this.login_alert_variant = "bg-red-500";
-        this.login_alert_msg = "Invalid login details.";
+    return;
+  }
 
-        return;
-      }
+  login_alert_variant.value = "bg-green-500";
+  login_alert_msg.value = "Success! You are now logged in.";
+  login_in_progress.value = false;
 
-      this.login_alert_variant = "bg-green-500";
-      this.login_alert_msg = "Success! You are now logged in.";
-      this.login_in_progress = false;
-
-      window.location.reload();
-    },
-  },
+  window.location.reload();
 };
 </script>
