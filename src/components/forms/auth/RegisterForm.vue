@@ -120,63 +120,54 @@
   </VeeForm>
 </template>
 
-<script>
-import { mapActions } from "pinia";
+<script setup>
+import { ref } from "vue";
 import useUserStore from "@/stores/user";
 
-export default {
-  name: "RegisterForm",
+const schema = {
+  name: "required|min:4|max:100|alpha_spaces",
+  email: "required|min:4|max:100|email",
+  age: "required|min_value:16|max_value:107",
+  attitude: "required",
+  password: "required|min:8|max:48|excluded:password,111111,123456",
+  confirm_password: "password_mismatch:@password",
+  country: "required|country_excluded:Russia,Belarus",
+  tos: "tos",
+};
 
-  data() {
-    return {
-      schema: {
-        name: "required|min:4|max:100|alpha_spaces",
-        email: "required|min:4|max:100|email",
-        age: "required|min_value:16|max_value:107",
-        attitude: "required",
-        password: "required|min:8|max:48|excluded:password,111111,123456",
-        confirm_password: "password_mismatch:@password",
-        country: "required|country_excluded:Russia,Belarus",
-        tos: "tos",
-      },
-      userData: {
-        country: "USA",
-        age: 23,
-        attitude: "listener",
-      },
-      reg_in_progress: false,
-      reg_show_alert: false,
-      reg_alert_variant: "bg-blue-500",
-      reg_alert_msg: "Please wait! Your account is being created.",
-    };
-  },
+const userData = ref({
+  country: "USA",
+  age: 23,
+  attitude: "listener",
+});
 
-  methods: {
-    ...mapActions(useUserStore, {
-      createUser: "register",
-    }),
+const reg_in_progress = ref(false);
+const reg_show_alert = ref(false);
+const reg_alert_variant = ref("bg-blue-500");
+const reg_alert_msg = ref("Please wait! Your account is being created.");
 
-    async register(values) {
-      this.reg_show_alert = true;
-      this.reg_in_progress = true;
-      this.reg_alert_variant = "bg-blue-500";
-      this.reg_alert_msg = "Please wait! Your account is being created.";
+const userStore = useUserStore();
 
-      try {
-        await this.createUser(values);
-      } catch (error) {
-        this.reg_in_progress = false;
-        this.reg_alert_variant = "bg-red-500";
-        this.reg_alert_msg = "An unexpected error occured. Please try again later.";
-        return;
-      }
+const register = async (values) => {
+  reg_show_alert.value = true;
+  reg_in_progress.value = true;
+  reg_alert_variant.value = "bg-blue-500";
+  reg_alert_msg.value = "Please wait! Your account is being created.";
 
-      this.reg_alert_variant = "bg-green-500";
-      this.reg_alert_msg = "Success! Your account has been created.";
-      this.reg_in_progress = true;
+  try {
+    await userStore.register(values);
+  } catch (error) {
+    reg_in_progress.value = false;
+    reg_alert_variant.value = "bg-red-500";
+    reg_alert_msg.value = "An unexpected error occured. Please try again later.";
 
-      window.location.reload();
-    },
-  },
+    return;
+  }
+
+  reg_alert_variant.value = "bg-green-500";
+  reg_alert_msg.value = "Success! Your account has been created.";
+  reg_in_progress.value = true;
+
+  window.location.reload();
 };
 </script>

@@ -42,9 +42,8 @@
 </template>
 
 <script setup>
-import { mapActions } from "pinia";
-import useUserStore from "@/stores/user";
 import { ref } from "vue";
+import useUserStore from "@/stores/user";
 
 const loginSchema = {
   email: "required|email",
